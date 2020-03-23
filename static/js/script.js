@@ -14,8 +14,8 @@ $(document).ready(function () {
 	//global variables
 	action_name = "action_greet_user";
 	user_id = "ali";
-        var recognition;
-        var wake_up;
+        // var recognition;
+        
 
 	//if you want the bot to start the conversation
 	//action_trigger();
@@ -23,6 +23,7 @@ $(document).ready(function () {
 
 })
 
+var recognition;
 // ========================== restart conversation ========================
 function restartConversation() {
 	$("#userInput").prop('disabled', true);
@@ -49,14 +50,16 @@ function stopRecognition() {
 
 // ========================== wake up the assistant ===============================
 function wakeUp(final_transcript) {
+
 	final_transcript = final_transcript.toLowerCase();
         var wakeWord = "maya";
-        var pos = final_transcript.indexOf(wakeWord);
-        if(pos > -1)
+        var pos = final_transcript.includes(wakeWord);
+        if(pos)
         {
             $(".profile_div").toggle();
             $(".widget").toggle();
-        }
+		}
+		
 }
 
 // ========================== start the speech recognition ===============================
@@ -69,7 +72,10 @@ function startRecognition() {
     recognition.onstart = function(event) {
         console.log("Update");
 	};
-    
+
+	var wake_up = "false";
+	var recognition;
+	
     recognition.onresult = function(event) {
         for (var i = event.resultIndex; i < event.results.length; ++i) {
         if(event.results[i].isFinal)
@@ -77,12 +83,13 @@ function startRecognition() {
             final_transcript += event.results[i][0].transcript;
             }
 	}
-    final_transcript = capitalize(final_transcript);
-    if(!wake_up)
+    //final_transcript = capitalize(final_transcript);
+    if(wake_up=='false')
         {
             wakeUp(final_transcript);
-            wake_up = true;
-            }
+			wake_up = true;
+			}
+
     setUserResponse(final_transcript);
     stopRecognition();
 	};
@@ -322,10 +329,10 @@ function setBotResponse(response) {
 }
 
 //====================================== Toggle chatbot =======================================
-$("#profile_div").click(function () {
-	$(".profile_div").toggle();
-	$(".widget").toggle();
-});
+// $("#profile_div").click(function () {
+// 	$(".profile_div").toggle();
+// 	$(".widget").toggle();
+// });
 
 //====================================== Suggestions ===========================================
 
